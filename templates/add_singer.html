@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>添加歌手</title>
+</head>
+<body>
+    <h1>添加歌手</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label for="singer_name">歌手名字</label>
+        <input type="text" id="singer_name" name="singer_name" required><br>
+
+        <label for="singer_bio">歌手简介</label>
+        <textarea id="singer_bio" name="singer_bio"></textarea><br>
+
+        <label for="singer_image">歌手图片</label>
+        <input type="file" id="singer_image" name="singer_image"><br>
+
+        <button type="submit">添加歌手</button>
+    </form>
+
+    <br>
+    <a href="{% url 'administrators_singersmanage_page' %}">返回歌手管理界面</a>
+</body>
+</html>

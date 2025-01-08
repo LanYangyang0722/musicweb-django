@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>用户主页</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f9fc;
+        color: #333;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+
+    h2 {
+        text-align: center;
+        color: #333;
+        margin-top: 20px;
+    }
+
+    p {
+        text-align: center;
+        font-size: 14px;
+        color: #666;
+    }
+
+    .form-container {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    input[type="text"] {
+        padding: 8px;
+        width: 250px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        margin-right: 10px;
+        font-size: 14px;
+    }
+
+    button {
+        padding: 8px 15px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    button:hover {
+        background-color: #45a049;
+    }
+
+    h3 {
+        text-align: center;
+        margin-top: 30px;
+        color: #333;
+    }
+
+    .song-list {
+        list-style: none;
+        padding-left: 0;
+        margin: 20px auto;
+        width: 80%;
+        max-width: 600px;
+    }
+
+    .song-list li {
+        background-color: #fff;
+        padding: 12px;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .song-list li a {
+        text-decoration: none;
+        color: #2C3E50;
+        font-size: 16px;
+    }
+
+    .song-list li a:hover {
+        color: #3498db;
+    }
+
+    /* 音频播放器 */
+    audio {
+        width: 100%;
+        max-width: 600px;
+        margin: 20px auto;
+        display: block;
+    }
+
+    /* 页面底部链接 */
+    .footer-link {
+        display: block;
+        text-align: center;
+        margin-top: 30px;
+        font-size: 14px;
+        color: #007BFF;
+        text-decoration: none;
+    }
+
+    .footer-link:hover {
+        text-decoration: underline;
+    }
+
+    /* 音频播放器固定在底部 */
+    .audio-player-container {
+        margin-top: auto;
+        padding: 20px 0;
+        background-color: #f4f9fc;
+        text-align: center;
+        width: 100%;
+    }
+</style>
+</head>
+<body>
+<h2>欢迎, {{ user.user_name }}!</h2>
+<p>您的用户 ID 是: {{ user.user_id }}</p>
+<p>邮箱: {{ user.user_email }}</p>
+
+<!-- 搜索框 -->
+<div class="form-container">
+    <form method="get" action="{% url 'user_search_songs' user_id=user.user_id %}">
+        <input type="text" name="search" value="{{ search_query }}" placeholder="搜索歌曲...">
+        <button type="submit">搜索</button>
+    </form>
+</div>
+
+<h3>音乐列表:</h3>
+<ul class="song-list">
+    {% for song in songs %}
+        <li>
+            <a href="#" class="song-link" data-src="{{ song.song_file_path }}">
+                {{ song.song_name }} - {{ song.singer_name }}
+            </a>
+        </li>
+    {% empty %}
+        <li>没有可用的歌曲。</li>
+    {% endfor %}
+</ul>
+
+<!-- 音频播放器 -->
+<div class="audio-player-container">
+    <audio id="audioPlayer" controls>
+        <source id="audioSource" src="" type="audio/mp3">
+        Your browser does not support the audio element.
+    </audio>
+</div>
+
+<p><a href="/" class="footer-link">返回主页</a></p>
+
+<script>
+    const songLinks = document.querySelectorAll('.song-link');
+    const audioPlayer = document.getElementById('audioPlayer');
+    const audioSource = document.getElementById('audioSource');
+
+    // 点击歌曲时播放
+    songLinks.forEach(link => {
+        link.addEventListener('click', function(event) {
+            event.preventDefault();
+            const songPath = this.getAttribute('data-src');
+            const fullPath = '/media/' + songPath;
+
+            audioSource.src = fullPath;
+            audioPlayer.load();
+            audioPlayer.play();
+        });
+    });
+</script>
+
+</body>
+</html>

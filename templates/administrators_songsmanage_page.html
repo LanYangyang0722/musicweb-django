@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>歌曲管理</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #333;
+  color: white;
+  padding: 10px 20px;
+}
+
+header h1 {
+  margin: 0;
+}
+
+.header-buttons {
+  display: flex;
+  align-items: center;
+}
+
+.header-buttons a {
+  margin-left: 20px;
+  color: white;
+  text-decoration: none;
+}
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+}
+
+.search-form, .upload-form {
+  width: 45%;
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.search-form input,
+.search-form button,
+.upload-form input,
+.upload-form button {
+  padding: 10px;
+  margin: 5px 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.search-form button,
+.upload-form button {
+  cursor: pointer;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+}
+
+.search-form button:hover,
+.upload-form button:hover {
+  background-color: #0056b3;
+}
+
+.upload-form input[type="file"] {
+  padding: 5px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+table, th, td {
+  border: 1px solid #ddd;
+}
+
+th, td {
+  padding: 10px;
+  text-align: center;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+button {
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.message-list {
+  margin: 20px 0;
+  padding: 10px;
+  background-color: #e7f3e7;
+  border-radius: 5px;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>歌曲管理</h1>
+  <div class="header-buttons">
+    <!-- 返回按钮 -->
+    <a href="{% url 'administrators_home_page' %}">
+      <button>返回管理员主页</button>
+    </a>
+  </div>
+</header>
+
+<div class="container">
+  <!-- 搜索模块 -->
+  <div class="search-form">
+    <h2>搜索歌曲</h2>
+    <form method="get">
+      <input type="text" name="search" placeholder="搜索歌曲" value="{{ search_query }}">
+      <button type="submit">搜索</button>
+    </form>
+  </div>
+
+  <!-- 上传歌曲模块 -->
+  <div class="upload-form">
+    <h2>上传新歌曲</h2>
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <label for="song_name">歌曲名:</label>
+      <input type="text" name="song_name" required><br><br>
+
+      <label for="singer_name">歌手名:</label>
+      <input type="text" name="singer_name" required><br><br>
+
+      <label for="song_category">歌曲分类:</label>
+      <input type="text" name="song_category"><br><br>
+
+      <label for="song_file">上传歌曲 (MP3):</label>
+      <input type="file" name="song_file" accept="audio/mp3" required><br><br>
+
+      <label for="song_image">上传封面图片:</label>
+      <input type="file" name="song_image" accept="image/*"><br><br>
+
+      <button type="submit">上传歌曲</button>
+    </form>
+  </div>
+</div>
+
+<!-- 显示所有歌曲 -->
+<h2 style="text-align: center;">所有歌曲</h2>
+<table>
+  <thead>
+    <tr>
+      <th>歌曲名</th>
+      <th>歌手名</th>
+      <th>歌曲分类</th>
+      <th>歌曲封面路径</th>
+      <th>操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for song in songs %}
+    <tr>
+      <td>{{ song.song_name }}</td>
+      <td>{{ song.singer_name }}</td>
+      <td>{{ song.song_category }}</td>
+      <td>{{ song.song_image_path }}</td>
+      <td>
+        <form method="post" action="{% url 'delete_song' song_id=song.song_id %}">
+          {% csrf_token %}
+          <button type="submit" onclick="return confirm('确定要删除这首歌曲吗？')">删除</button>
+        </form>
+      </td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="5">没有找到歌曲。</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<!-- 错误和成功信息 -->
+{% if messages %}
+<div class="message-list">
+  <ul>
+    {% for message in messages %}
+    <li>{{ message }}</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
+
+</body>
+</html>

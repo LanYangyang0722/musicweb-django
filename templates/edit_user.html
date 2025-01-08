@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>编辑用户</title>
+    <style>
+        /* 基础样式 */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f1f8ff; /* 淡蓝色背景 */
+            color: #333; /* 文字颜色 */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        h1 {
+            color: #0044cc; /* 蓝色标题 */
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .container {
+            background-color: #ffffff; /* 白色表单背景 */
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 400px;
+        }
+
+        /* 输入框样式 */
+        input[type="text"],
+        input[type="password"],
+        input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0 20px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        /* 按钮样式 */
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff; /* 蓝色按钮 */
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3; /* 深蓝色按钮悬停效果 */
+        }
+
+        /* 消息提示样式 */
+        .messages {
+            margin-bottom: 20px;
+            background-color: #ffdddd; /* 淡红色背景 */
+            color: #d8000c; /* 红色文本 */
+            padding: 10px;
+            border: 1px solid #d8000c;
+            border-radius: 4px;
+        }
+
+        .messages p {
+            margin: 0;
+            padding: 0;
+        }
+
+        /* 返回链接样式 */
+        a {
+            color: #007bff; /* 蓝色链接 */
+            text-decoration: none;
+            font-size: 16px;
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>编辑用户信息</h1>
+
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+            <label for="user_name">用户名：</label>
+            <input type="text" id="user_name" name="user_name" value="{{ user.user_name }}">
+            <br>
+            <label for="user_password">密码：</label>
+            <input type="password" id="user_password" name="user_password" value="{{ user.user_password }}">
+            <br>
+            <label for="user_email">邮箱：</label>
+            <input type="email" id="user_email" name="user_email" value="{{ user.user_email }}">
+            <br>
+            <button type="submit">保存修改</button>
+        </form>
+
+        <a href="{% url 'administrators_usermanage_page' %}">返回用户管理</a>
+    </div>
+
+</body>
+</html>

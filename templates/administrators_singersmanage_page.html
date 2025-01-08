@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>歌手管理</title>
+    <style>
+        /* 全局样式 */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff; /* 淡蓝色背景 */
+            color: #333;
+            margin: 0;
+            padding: 0;
+            position: relative;
+        }
+
+        h1 {
+            text-align: center;
+            color: #4a90e2; /* 淡蓝色标题 */
+            padding: 20px;
+            background-color: #e3f2fd;
+            margin: 0;
+        }
+
+        h2 {
+            color: #4a90e2;
+            margin-top: 30px;
+            font-size: 24px;
+        }
+
+        a {
+            color: #4a90e2;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* 按钮样式 */
+        button, .action-buttons a {
+            background-color: #4a90e2;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        button:hover, .action-buttons a:hover {
+            background-color: #357abd;
+        }
+
+        /* 表格样式 */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #4a90e2;
+            color: white;
+        }
+
+        td {
+            background-color: #f9f9f9;
+        }
+
+        td a {
+            color: #4a90e2;
+            text-decoration: none;
+        }
+
+        td a:hover {
+            text-decoration: underline;
+        }
+
+        /* 搜索框和按钮样式 */
+        .search-container {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            margin: 20px;
+        }
+
+        .search-container form {
+            display: flex;
+            align-items: center;
+            width: 80%;
+        }
+
+        .search-container input[type="text"] {
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+            width: 80%;
+        }
+
+        .search-container button {
+            margin-left: 10px;
+        }
+
+        /* 返回管理员页面按钮样式（调整为搜索按钮样式） */
+        .back-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .back-button a {
+            background-color: #4a90e2;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .back-button a:hover {
+            background-color: #357abd;
+        }
+
+    </style>
+</head>
+<body>
+
+    <h1>歌手管理界面</h1>
+
+    <!-- 返回管理员页面按钮 -->
+    <div class="back-button">
+        <a href="{% url 'administrators_home_page' %}">
+            返回管理员页面
+        </a>
+    </div>
+
+    <!-- 搜索和添加歌手按钮 -->
+    <div class="search-container">
+        <!-- 添加歌手按钮，样式与搜索按钮相同 -->
+        <div class="action-buttons">
+            <a href="{% url 'add_singer' %}">添加歌手</a>
+        </div>
+
+        <!-- 搜索功能 -->
+        <form method="get" action="{% url 'administrators_singersmanage_page' %}">
+            <input type="text" name="search" placeholder="搜索歌手..." value="{{ request.GET.search }}">
+            <button type="submit">搜索</button>
+        </form>
+    </div>
+
+    <h2>歌手列表</h2>
+
+    <!-- 歌手列表 -->
+    <table>
+        <thead>
+            <tr>
+                <th>歌手ID</th>
+                <th>歌手名字</th>
+                <th>歌手简介</th>
+                <th>歌手图片路径</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for singer in singers %}
+            <tr>
+                <td>{{ singer.singer_id }}</td>
+                <td>{{ singer.singer_name }}</td>
+                <td>{{ singer.singer_bio }}</td>
+                <td>
+                    {% if singer.singer_image_path %}
+                    <img src="{{ MEDIA_URL }}singer/{{ singer.singer_image_path }}" alt="歌手图片" width="50" height="50">
+                    {% else %}
+                    无图片
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'edit_singer' singer_id=singer.singer_id %}">编辑</a> |
+                    <a href="{% url 'delete_singer' singer_id=singer.singer_id %}" onclick="return confirm('确定要删除这个歌手吗？')">删除</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</body>
+</html>

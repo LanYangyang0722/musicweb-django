@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>显示一行文字</title>
+    <style>
+        /* 统一设置背景色和字体样式 */
+        body {
+            background-color: #f0f4f8; /* 浅蓝色背景 */
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }
+
+        /* 显示“管理员界面”文字样式 */
+        p {
+            font-size: 32px;
+            font-weight: bold;
+            color: #2a3d66; /* 深蓝色文字 */
+            margin-bottom: 40px; /* 与按钮之间的间距 */
+        }
+
+        /* 容器用于按钮的布局 */
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px; /* 按钮之间的间距 */
+        }
+
+        /* 按钮的基础样式 */
+        .button {
+            width: 200px; /* 设置固定宽度 */
+            padding: 12px;
+            font-size: 18px;
+            cursor: pointer;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            background-color: #3498db; /* 初始蓝色 */
+            transition: all 0.3s ease; /* 按钮状态变化时的过渡效果 */
+        }
+
+        /* 给按钮添加hover效果 */
+        .button:hover {
+            background-color: #2980b9; /* 鼠标悬停时变深蓝 */
+            transform: translateY(-3px); /* 鼠标悬停时稍微上移 */
+        }
+
+        /* 按钮点击时的效果 */
+        .button:active {
+            background-color: #1c6ea4; /* 点击时的深蓝色 */
+            transform: translateY(1px); /* 点击时稍微下沉 */
+        }
+    </style>
+</head>
+<body>
+    <p>这是管理员界面</p>
+
+    <!-- 按钮容器 -->
+    <div class="button-container">
+        <!-- 用户管理按钮，点击后跳转到管理员用户管理页面 -->
+        <button class="button" onclick="window.location.href='{% url 'administrators_usermanage_page' %}'">用户管理</button>
+
+        <!-- 音乐管理按钮，点击后跳转到管理员音乐管理页面 -->
+        <button class="button" onclick="window.location.href='{% url 'administrators_songsmanage_page' %}'">音乐管理</button>
+
+        <!-- 歌手管理按钮，点击后跳转到管理员歌手管理页面 -->
+        <button class="button" onclick="window.location.href='{% url 'administrators_singersmanage_page' %}'">歌手管理</button>
+    </div>
+</body>
+</html>

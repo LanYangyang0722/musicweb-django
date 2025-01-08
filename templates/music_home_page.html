@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登录与注册</title>
+    <style>
+        /* 现有的样式部分保持不变 */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            background-color: #2C3E50;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+        }
+
+        .admin-login {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #3498DB;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .admin-login:hover {
+            background-color: #2980B9;
+        }
+
+        .form-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-top: 50px;
+        }
+
+        h2 {
+            color: #2C3E50;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .form-container p {
+            margin: 15px 0;
+            font-size: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            width: 100%;
+        }
+
+        .form-container p label {
+            font-size: 16px;
+            margin-bottom: 5px;
+            width: 100%;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="email"] {
+            padding: 10px;
+            width: 250px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        input[type="submit"],
+        button[type="button"] {
+            background-color: #3498DB;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            width: 250px;
+            margin-top: 15px;
+        }
+
+        input[type="submit"]:hover,
+        button[type="button"]:hover {
+            background-color: #2980B9;
+        }
+
+        .error {
+            color: red;
+            font-size: 14px;
+        }
+
+        .success {
+            color: green;
+            font-size: 14px;
+        }
+
+        #registerForm {
+            display: none;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>登录与注册</h1>
+    </div>
+
+    <button class="admin-login" onclick="window.location.href='/administrators_login_page/'">管理员登录</button>
+
+    <div class="form-container">
+        <!-- 登录表单 -->
+        <div id="loginForm">
+            <h2>登录</h2>
+            <form action="/user_login/" method="post">
+                {% csrf_token %}
+                <p><label>用户名:</label><input type="text" name="user" /></p>
+                <p><label>密码:</label><input type="password" name="pwd" /></p>
+                <input type="submit" value="提交" />
+            </form>
+
+            {% if login_failed %}
+                <p class="error">登录失败，请输入账号和密码。</p>
+            {% endif %}
+
+            {% if login_failed1 %}
+                <p class="error">登录失败，账号或密码错误。</p>
+            {% endif %}
+
+            <p><button type="button" onclick="toggleForms()">注册新账号</button></p>
+        </div>
+
+        <!-- 注册表单 -->
+        <div id="registerForm">
+            <h2>注册</h2>
+            <form id="registrationForm" action="/user_register/" method="post" onsubmit="return validateRegistration()">
+                {% csrf_token %}
+                <p><label>账号:</label><input type="text" name="user" id="username" /></p>
+                <p><label>密码:</label><input type="password" name="pwd" id="password" /></p>
+                <p><label>重复密码:</label><input type="password" name="pwd1" id="confirmPassword" /></p>
+                <p><label>邮箱:</label><input type="email" name="mail" id="email" /></p>
+                <input type="submit" value="注册" />
+            </form>
+
+            {% if error %}
+                <p class="error">{{ error }}</p>
+            {% endif %}
+            {% if success %}
+                <p class="success">{{ success }}</p>
+                <p><button type="button" onclick="toggleForms()">返回登录</button></p>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        // 切换登录和注册表单的显示
+        function toggleForms() {
+            var loginForm = document.getElementById('loginForm');
+            var registerForm = document.getElementById('registerForm');
+
+            if (loginForm.style.display === 'none') {
+                loginForm.style.display = 'block';
+                registerForm.style.display = 'none';
+            } else {
+                loginForm.style.display = 'none';
+                registerForm.style.display = 'block';
+            }
+        }
+
+        // 验证注册表单
+        function validateRegistration() {
+            var username = document.getElementById('username').value;
+            var password = document.getElementById('password').value;
+            var confirmPassword = document.getElementById('confirmPassword').value;
+            var email = document.getElementById('email').value;
+
+            var usernameRegex = /^[a-zA-Z0-9]{6,20}$/;
+            var passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{8,20}$/;
+            var emailRegex = /^[^@]+@[^@]+\.[^@]+$/;
+
+            // 验证用户名
+            if (!usernameRegex.test(username)) {
+                alert('用户名必须是6到20位的字母或数字');
+                return false;
+            }
+
+            // 验证密码
+            if (!passwordRegex.test(password)) {
+                alert('密码必须是8到20位，并且包含字母和数字');
+                return false;
+            }
+
+            // 验证密码是否一致
+            if (password !== confirmPassword) {
+                alert('两次输入的密码不一致');
+                return false;
+            }
+
+            // 验证邮箱格式
+            if (!emailRegex.test(email)) {
+                alert('请输入有效的邮箱地址');
+                return false;
+            }
+
+            // 如果所有验证通过，返回 true
+            return true;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>编辑歌手</title>
+    <style>
+        /* 页面背景和字体颜色 */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff; /* 淡蓝色背景 */
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* 页面中心化容器 */
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff; /* 白色背景 */
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #007acc; /* 淡蓝色文字 */
+            font-size: 2.5rem;
+        }
+
+        /* 表单标签样式 */
+        label {
+            font-size: 1rem;
+            color: #007acc; /* 蓝色文字 */
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        /* 输入框和文本框的样式 */
+        input[type="text"],
+        input[type="file"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #c0d6e4; /* 淡蓝色边框 */
+            border-radius: 4px;
+            background-color: #f9f9f9; /* 淡灰色背景 */
+            font-size: 1rem;
+            color: #333;
+        }
+
+        textarea {
+            resize: vertical; /* 允许调整文本框高度 */
+            min-height: 100px;
+        }
+
+        /* 提交按钮样式 */
+        button {
+            background-color: #007acc; /* 淡蓝色背景 */
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 1.1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #005f8a; /* 深蓝色 */
+        }
+
+        /* 返回链接样式 */
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #007acc;
+            font-size: 1.1rem;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* 图片显示部分 */
+        .image-info {
+            background-color: #f0f8ff;
+            padding: 10px;
+            border: 1px solid #c0d6e4;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        .image-info p {
+            font-size: 1rem;
+            color: #007acc;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>编辑歌手</h1>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label for="singer_name">歌手名字</label>
+            <input type="text" id="singer_name" name="singer_name" value="{{ singer.singer_name }}" required><br>
+
+            <label for="singer_bio">歌手简介</label>
+            <textarea id="singer_bio" name="singer_bio">{{ singer.singer_bio }}</textarea><br>
+
+            <label for="singer_image">歌手图片</label>
+            {% if singer.singer_image_path %}
+            <div class="image-info">
+                <p>当前图片路径：{{ MEDIA_URL }}singer/{{ singer.singer_image_path }}</p>
+            </div>
+            {% endif %}
+            <input type="file" id="singer_image" name="singer_image"><br>
+
+            <button type="submit">更新歌手</button>
+        </form>
+
+        <a href="{% url 'administrators_singersmanage_page' %}">返回歌手管理界面</a>
+    </div>
+
+</body>
+</html>

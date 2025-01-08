@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录与注册</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff; /* 淡蓝色背景 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+
+        h2 {
+            color: #0073e6; /* 蓝色标题 */
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        p {
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-size: 16px;
+            color: #333;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+
+        input[type="submit"] {
+            width: 100%;
+            padding: 12px;
+            background-color: #0073e6; /* 蓝色按钮 */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #005bb5; /* 按钮悬浮效果 */
+        }
+
+        .error-message {
+            color: red;
+            text-align: center;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .error-message p {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>登录</h2>
+        <form action="/administrators_login/" method="post">
+            {% csrf_token %}
+            <p><label for="user">用户名:</label><input type="text" id="user" name="user" /></p>
+            <p><label for="pwd">密码:</label><input type="password" id="pwd" name="pwd" /></p>
+            <input type="submit" value="提交" />
+        </form>
+
+        {% if login_failed %}
+            <div class="error-message">
+                <p>登录失败，请输入账号和密码。</p>
+            </div>
+        {% endif %}
+        {% if login_failed1 %}
+            <div class="error-message">
+                <p>登录失败，账号或密码错误。</p>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
